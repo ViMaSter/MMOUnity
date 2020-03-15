@@ -18,6 +18,13 @@ public class Movement : MonoBehaviour
         return Physics.Raycast(transform.position, -Vector3.up, collider.bounds.extents.y + groundedCheckThreshold);
     }
 
+    public Vector2 MovementDirectionRequest
+    {
+        get
+        {
+            return movementDirectionRequest;
+        }
+    }
     private Vector2 movementDirectionRequest;
     public void SetMovementRequest(Vector2 direction)
     {
@@ -29,7 +36,7 @@ public class Movement : MonoBehaviour
         if (IsGrounded())
         {
             QueueMove(movementDirectionRequest);
-            
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
@@ -42,6 +49,13 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public Vector2 Velocity
+    {
+        get
+        {
+            return velocity;
+        }
+    }
     private Vector2 velocity;
     private void QueueMove(Vector2 direction)
     {
@@ -52,6 +66,7 @@ public class Movement : MonoBehaviour
     }
     private void ApplyMovement()
     {
+        transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * Mathf.Atan2(velocity.x, velocity.y), 0);
         transform.position += new Vector3(velocity.x, 0, velocity.y) * Time.deltaTime;
     }
     private void ApplyMovementFalloff()
