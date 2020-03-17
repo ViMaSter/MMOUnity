@@ -385,5 +385,10 @@ PrefabInstance:
       propertyPath: overriddenAngleSnapbackSpeed
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 289282629245232252, guid: b571878921955ba4798b0030bcd7c6d7,
+        type: 3}
+      propertyPath: overriddenDirectionAngleSnapbackMaxValue
+      value: 0.75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b571878921955ba4798b0030bcd7c6d7, type: 3}

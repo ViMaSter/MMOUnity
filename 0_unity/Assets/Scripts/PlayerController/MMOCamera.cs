@@ -18,22 +18,22 @@ public class MMOCamera : MonoBehaviour
 
 	private float walkingOffsetInDegrees = 5;
 
-    Vector2 requestedAngle = new Vector2(0, -45);
-    Vector2 overriddenAngle = new Vector2(0, -45);
-    private float overriddenAnglePercentage = 0.0f;
+    Vector2 movementDirection = new Vector2(0, -45);
+    float scenicDirectionAngle = 0.0f;
+    private float scenicAnglePercentage = 0.0f;
 
     [Range(0, 1f)]
-    public float overriddenAngleSnapbackMaxValue = 0.0f;
-    Vector2 RequestedAngle
+    public float scenicAngleSnapbackMaxValue = 0.75f;
+    Vector2 InterpolatedCameraDirection
     {
         get
         {
-            return Vector2.Lerp(requestedAngle, overriddenAngle, overriddenAnglePercentage);
+            return new Vector2(Mathf.Lerp(movementDirection.x, scenicDirectionAngle, scenicAnglePercentage), movementDirection.y);
         }
     }
 
     [SerializeField]
-    float[] requestedAngleYBounds = { -89, 0 };
+    float[] cameraAngleYBounds = { -89, 0 };
 
     float currentTargetY = 0.0f;
 	[Range(0, 1)]
@@ -47,7 +47,7 @@ public class MMOCamera : MonoBehaviour
     void Awake()
     {
         transform.rotation = target.rotation;
-        requestedAngle.x = transform.eulerAngles.y;
+        movementDirection.x = transform.eulerAngles.y;
     }
 
     public void Zoom(float direction)
@@ -59,11 +59,19 @@ public class MMOCamera : MonoBehaviour
     void Update()
     {
         Zoom(Input.mouseScrollDelta.y * 0.1f);
+        
+        // override current movement direction based on current camera direction and fully revoke scenic camera transition
+        if (Input.GetMouseButtonDown(1))
+        {
+            movementDirection.x = InterpolatedCameraDirection.x;
+            scenicAnglePercentage = 0.0f;
+        }
 
         if (Input.GetMouseButton(1))
         {
-            requestedAngle += new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
-            requestedAngle.y = Mathf.Clamp(requestedAngle.y, requestedAngleYBounds[0], requestedAngleYBounds[1]);
+            // apply X- and Y-axis update to movement direction
+            movementDirection += new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
+            movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
         }
 		else
 		{
@@ -72,32 +80,40 @@ public class MMOCamera : MonoBehaviour
 			float angleOffset = Mathf.Rad2Deg * Mathf.Atan2(-req.x, req.y);
 			if (req.sqrMagnitude != 0)
 			{
-				requestedAngle.x = Mathf.LerpAngle(requestedAngle.x, angleOffset, 1 - velocityBasedAngleCorrection) + 360 % 360;
+				movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, 1 - velocityBasedAngleCorrection) + 360 % 360;
 			}
         }
         
         if (Input.GetMouseButtonDown(0))
         {
-            overriddenAngle = requestedAngle;
-            overriddenAnglePercentage = 1.0f;
+            // override current visual direction based on current camera direction and fully activate scenic camera transition
+            scenicDirectionAngle = InterpolatedCameraDirection.x;
+            scenicAnglePercentage = 1.0f;
         }
 
         if (Input.GetMouseButton(0))
         {
-            requestedAngle += new Vector2(0, Input.GetAxisRaw("CameraY"));
-            requestedAngle.y = Mathf.Clamp(requestedAngle.y, requestedAngleYBounds[0], requestedAngleYBounds[1]);
+            // apply Y-axis update to movement direction and X-axis update to scenic camera direction
+            movementDirection += new Vector2(0, Input.GetAxisRaw("CameraY"));
+            movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
 
-            overriddenAngle += new Vector2(-Input.GetAxisRaw("CameraX"), 0);
+            scenicDirectionAngle += -Input.GetAxisRaw("CameraX");
         }
         else
         {
-            overriddenAnglePercentage = Mathf.Clamp(overriddenAnglePercentage - (overriddenAngleSnapbackMaxValue * Time.deltaTime), 0, 1);
+            // slowly reset scenic camera transition
+            scenicAnglePercentage = Mathf.Clamp(scenicAnglePercentage - (scenicAngleSnapbackMaxValue * Time.deltaTime), 0, 1);
         }
+    }
+
+    public Quaternion GetMovementDirection()
+    {
+        return Quaternion.Euler(0, -movementDirection.x, 0);
     }
 
     void LateUpdate()
     {
-        transform.eulerAngles = new Vector3(RequestedAngle.y, 180 - RequestedAngle.x, 0);
+        transform.eulerAngles = new Vector3(InterpolatedCameraDirection.y, 180 - InterpolatedCameraDirection.x, 0);
 
         // get curernt zoom distance
         Vector3 distance = Vector3.Lerp(cameraDistances[0], cameraDistances[1], zoomFactor);

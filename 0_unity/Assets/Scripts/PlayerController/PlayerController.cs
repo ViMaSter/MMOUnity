@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     private Quaternion ComputeViewingBasedDirection()
     {
-        Vector3 dir = camera.transform.forward;
+        Vector3 dir = camera.GetComponent<MMOCamera>().GetMovementDirection() * Vector3.forward;
         dir.y = 0;
         return Quaternion.LookRotation(dir.normalized, Vector3.up);
     }
