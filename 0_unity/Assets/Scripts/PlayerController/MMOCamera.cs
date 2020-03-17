@@ -19,11 +19,16 @@ public class MMOCamera : MonoBehaviour
 	private float walkingOffsetInDegrees = 5;
 
     Vector2 requestedAngle = new Vector2(0, -45);
+    Vector2 overriddenAngle = new Vector2(0, -45);
+    private float overriddenAnglePercentage = 0.0f;
+
+    [Range(0, 1f)]
+    public float overriddenAngleSnapbackMaxValue = 0.0f;
     Vector2 RequestedAngle
     {
         get
         {
-            return requestedAngle;
+            return Vector2.Lerp(requestedAngle, overriddenAngle, overriddenAnglePercentage);
         }
     }
 
@@ -69,7 +74,25 @@ public class MMOCamera : MonoBehaviour
 			{
 				requestedAngle.x = Mathf.LerpAngle(requestedAngle.x, angleOffset, 1 - velocityBasedAngleCorrection) + 360 % 360;
 			}
-		}
+        }
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            overriddenAngle = requestedAngle;
+            overriddenAnglePercentage = 1.0f;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            requestedAngle += new Vector2(0, Input.GetAxisRaw("CameraY"));
+            requestedAngle.y = Mathf.Clamp(requestedAngle.y, requestedAngleYBounds[0], requestedAngleYBounds[1]);
+
+            overriddenAngle += new Vector2(-Input.GetAxisRaw("CameraX"), 0);
+        }
+        else
+        {
+            overriddenAnglePercentage = Mathf.Clamp(overriddenAnglePercentage - (overriddenAngleSnapbackMaxValue * Time.deltaTime), 0, 1);
+        }
     }
 
     void LateUpdate()
@@ -88,7 +111,5 @@ public class MMOCamera : MonoBehaviour
 
         // finally look at target
         transform.LookAt(targetPosition + targetOffset);
-
-		transform.rotation = transform.rotation;
     }
 }
