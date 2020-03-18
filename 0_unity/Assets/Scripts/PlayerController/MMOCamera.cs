@@ -13,7 +13,7 @@ public class MMOCamera : MonoBehaviour
     #endregion
 
     [SerializeField]
-    Vector3[] cameraDistances = { new Vector3(0, 0, 5.0f), new Vector3(0, 0, 10.0f) };
+    Vector3[] zoomTargetOffsetBounds = { new Vector3(0, 0, 5.0f), new Vector3(0, 0, 10.0f) };
     float zoomFactor = 1.0f;
 
 	private float walkingOffsetInDegrees = 5;
@@ -22,8 +22,9 @@ public class MMOCamera : MonoBehaviour
     float scenicDirectionAngle = 0.0f;
     private float scenicAnglePercentage = 0.0f;
 
+    [SerializeField]
     [Range(0, 1f)]
-    public float scenicAngleSnapbackMaxValue = 0.75f;
+    float scenicAngleSnapbackMaxValue = 0.75f;
     Vector2 InterpolatedCameraDirection
     {
         get
@@ -56,10 +57,29 @@ public class MMOCamera : MonoBehaviour
         zoomFactor = Mathf.Clamp(zoomFactor, 0.0f, 1.0f);
     }
 
+    private bool cameraAnalogAxisInUse = false;
+
+    [Header("Gamepad")]
+    [Range(0, 5)]
+    public float analogStickSensitivity = 5.0f;
+
+    [Range(0, 90)]
+    public float backwardsCameraAdjustmentAngleDeadzone = 10.0f;
+
     void Update()
     {
+        Vector2 input = Vector2.zero;
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        {
+            input = new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
+        }
+        else if (Input.GetAxisRaw("CameraAnalogX") != 0 || Input.GetAxisRaw("CameraAnalogY") != 0)
+        {
+            input = new Vector2(-Input.GetAxisRaw("CameraAnalogX"), Input.GetAxisRaw("CameraAnalogY")) * analogStickSensitivity;
+        }
+
         Zoom(Input.mouseScrollDelta.y * 0.1f);
-        
+
         // override current movement direction based on current camera direction and fully revoke scenic camera transition
         if (Input.GetMouseButtonDown(1))
         {
@@ -67,10 +87,10 @@ public class MMOCamera : MonoBehaviour
             scenicAnglePercentage = 0.0f;
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) || Input.GetAxisRaw("CameraAnalogX") != 0 || Input.GetAxisRaw("CameraAnalogY") != 0)
         {
             // apply X- and Y-axis update to movement direction
-            movementDirection += new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
+            movementDirection += new Vector2(input.x, input.y);
             movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
         }
 		else
@@ -78,9 +98,14 @@ public class MMOCamera : MonoBehaviour
 			Vector2 req = target.GetComponent<Movement>().MovementDirectionRequest;
 			Vector2 vel = target.GetComponent<Movement>().Velocity;
 			float angleOffset = Mathf.Rad2Deg * Mathf.Atan2(-req.x, req.y);
+
+            float backwardsModifier = Mathf.Abs(movementDirection.x - angleOffset) % 360;
+            float angle = (backwardsModifier - 180);
+            float val = Mathf.Abs(Mathf.Clamp(angle, -(backwardsCameraAdjustmentAngleDeadzone/2), (backwardsCameraAdjustmentAngleDeadzone/2)) / (backwardsCameraAdjustmentAngleDeadzone/2));
+            Debug.Log("Angle: " + angle + "\nval: " + val);
 			if (req.sqrMagnitude != 0)
 			{
-				movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, 1 - velocityBasedAngleCorrection) + 360 % 360;
+				movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, (1 - velocityBasedAngleCorrection) * val) + 360 % 360;
 			}
         }
         
@@ -94,10 +119,10 @@ public class MMOCamera : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             // apply Y-axis update to movement direction and X-axis update to scenic camera direction
-            movementDirection += new Vector2(0, Input.GetAxisRaw("CameraY"));
+            movementDirection += new Vector2(0, input.y);
             movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
 
-            scenicDirectionAngle += -Input.GetAxisRaw("CameraX");
+            scenicDirectionAngle += -input.x;
         }
         else
         {
@@ -116,7 +141,7 @@ public class MMOCamera : MonoBehaviour
         transform.eulerAngles = new Vector3(InterpolatedCameraDirection.y, 180 - InterpolatedCameraDirection.x, 0);
 
         // get curernt zoom distance
-        Vector3 distance = Vector3.Lerp(cameraDistances[0], cameraDistances[1], zoomFactor);
+        Vector3 distance = Vector3.Lerp(zoomTargetOffsetBounds[0], zoomTargetOffsetBounds[1], zoomFactor);
 
         // determine target position with interpolated Y position
         Vector3 targetPosition = target.position;

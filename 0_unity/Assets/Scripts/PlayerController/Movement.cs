@@ -37,7 +37,7 @@ public class Movement : MonoBehaviour
         {
             QueueMove(movementDirectionRequest);
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetButtonDown("Jump"))
             {
                 rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             }

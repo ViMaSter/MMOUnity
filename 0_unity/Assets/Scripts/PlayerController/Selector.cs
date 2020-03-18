@@ -72,4 +72,16 @@ public class Selector : MonoBehaviour
 
         selectedParticleSystem.position = currentSelectable.transform.position - Vector3.up * currentSelectable.GetComponent<Collider>().bounds.extents.y;
     }
+
+    void OnGUI()
+    {
+        if (currentHoveredSelectable != null)
+        {
+            GUI.Label(new Rect(0, Screen.height - 50, Screen.width, 50), "Hover: " + currentHoveredSelectable);
+        }
+        if (currentSelectable != null)
+        {
+            GUI.Label(new Rect(0, Screen.height - 25, Screen.width, 25), "Target: " + currentSelectable);
+        }
+    }
 }

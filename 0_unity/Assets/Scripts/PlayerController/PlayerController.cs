@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Vector3 movementRequestInWorldSpace = new Vector3(
-            (Input.GetKey(KeyCode.A) ? -1 : 0) + (Input.GetKey(KeyCode.D) ? 1 : 0),
+            Input.GetAxis("MovementX"),
             0,
-            (Input.GetKey(KeyCode.W) ? 1 : 0) + (Input.GetKey(KeyCode.S) ? -1 : 0)
+            Input.GetAxis("MovementY")
         );
 
         if (movementRequestInWorldSpace.sqrMagnitude != 0)
@@ -29,13 +29,5 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = camera.GetComponent<MMOCamera>().GetMovementDirection() * Vector3.forward;
         dir.y = 0;
         return Quaternion.LookRotation(dir.normalized, Vector3.up);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(playerPawn.transform.position, playerPawn.transform.position + (ComputeViewingBasedDirection() * Vector3.forward) * 5);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(playerPawn.transform.position, playerPawn.transform.position + (ComputeViewingBasedDirection() * Vector3.right) * 5);
     }
 }
