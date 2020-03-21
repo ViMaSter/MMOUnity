@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Selector : MonoBehaviour
+public class SingleTargetSelector : MonoBehaviour
 {
     public Transform selectedParticleSystem;
     public new Camera camera;
@@ -41,7 +41,7 @@ public class Selector : MonoBehaviour
         }
     }
 
-    void Update()
+    public void AttemptSelection()
     {
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -50,10 +50,7 @@ public class Selector : MonoBehaviour
         {
             currentHoveredSelectable = hit.transform.GetComponent<Selectable>();
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                currentSelectable = currentHoveredSelectable;
-            }
+            currentSelectable = currentHoveredSelectable;
         }
     }
 

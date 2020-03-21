@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class DealDamageUI : MonoBehaviour
 {
+    PlayerController playerController;
+
     private void Awake()
     {
-        GetComponent<Selector>().OnSelectionChanged += OnSelectionChanged;
+        playerController = GetComponent<PlayerController>();
+        GetComponent<SingleTargetSelector>().OnSelectionChanged += OnSelectionChanged;
     }
 
     Killable killableTarget;
@@ -13,19 +17,35 @@ public class DealDamageUI : MonoBehaviour
         killableTarget = newSelection?.GetComponent<Killable>();
     }
 
+    Action<Vector3?, RaycastHit[]> ApplyAoEDamage(float damage)
+    {
+        return (Vector3? position, RaycastHit[] targets) => {
+            foreach(var target in targets)
+            {
+                target.transform.GetComponent<Killable>().InflictDamage(damage);
+            }
+            return;
+        };
+    }
     private void OnGUI()
     {
-        if (killableTarget == null)
-        {
-            return;
-        }
-
         int[] damageIntervals = new int[] {10, 20, 50, 100};
-        for (int i = 0; i < damageIntervals.Length; i++)
+        for (int damageIndex = 0; damageIndex < damageIntervals.Length; damageIndex++)
         {
-            if (GUI.Button(new Rect(0, 50 * i, 200, 50), $"Deal {damageIntervals[i]} damage"))
+            int[] sizes = new int [] {1, 2, 5, 10};
+            for (int sizeIndex = 0; sizeIndex < sizes.Length; sizeIndex++)
             {
-                killableTarget.InflictDamage(damageIntervals[i]);
+                if (GUI.Button(new Rect(50 + 200 * (sizeIndex + 1), 50 * damageIndex, 200, 50), $"[AOE] Deal {damageIntervals[damageIndex]} damage (size {sizes[sizeIndex]})"))
+                {
+                    playerController.RetrieveAoESelectorPosition(sizes[sizeIndex], ApplyAoEDamage(damageIntervals[damageIndex]).Invoke);
+                }
+            }
+            if (killableTarget != null)
+            {
+                if (GUI.Button(new Rect(0, 50 * damageIndex, 200, 50), $"[SINGLE] Deal {damageIntervals[damageIndex]} damage"))
+                {
+                    killableTarget.InflictDamage(damageIntervals[damageIndex]);
+                }
             }
         }
     }
