@@ -10,7 +10,7 @@ public class Killable : MonoBehaviour
     public delegate void tookDamageEvent(float damageApplied, float newHealth);
     public event tookDamageEvent tookDamage;
 
-
+    public float GetCurrentHealth => CurrentHealth;
     public float MaximumHealth = 100;
 
     private float _currentHealth;

@@ -27,8 +27,8 @@ public class AreaOfEffectSelector : MonoBehaviour
 
     private void OnEnable()
     {
-        validAoEIndicator.transform.localScale = (new Vector3(1, 0, 1) * Radius) + new Vector3(0, 0.001f, 0);
-        invalidAoEIndicator.transform.localScale = (new Vector3(1, 0, 1) * Radius) + new Vector3(0, 0.001f, 0);
+        validAoEIndicator.transform.localScale = (new Vector3(1, 0, 1) * (Radius*2)) + new Vector3(0, 0.001f, 0);
+        invalidAoEIndicator.transform.localScale = (new Vector3(1, 0, 1) * (Radius*2)) + new Vector3(0, 0.001f, 0);
     }
 
     public void CancelSelection()
