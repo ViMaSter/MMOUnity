@@ -11,7 +11,7 @@ public class Healthbar : MonoBehaviour
         owningKillable = transform.parent.GetComponent<Killable>();
         FGTransform = transform.Find("FG").GetComponent<RectTransform>();
         RefreshRendering(0, 0);
-        owningKillable.tookDamage += RefreshRendering;
+        owningKillable.TookDamage += RefreshRendering;
     }
 
     void SetPercentage(float percentage)

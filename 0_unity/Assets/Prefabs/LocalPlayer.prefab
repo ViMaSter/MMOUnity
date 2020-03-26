@@ -157,6 +157,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 289282629245232252}
   playerPawn: {fileID: 289282629957239226}
+  singleTargetSelector: {fileID: 0}
+  areaOfEffectSelector: {fileID: 0}
 --- !u!1 &289282629957239228
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,10 +5,10 @@ using UnityEngine;
 public class Killable : MonoBehaviour
 {
     public delegate void wasKilledEvent();
-    public event wasKilledEvent wasKilled;
+    public event wasKilledEvent WasKilled;
     
     public delegate void tookDamageEvent(float damageApplied, float newHealth);
-    public event tookDamageEvent tookDamage;
+    public event tookDamageEvent TookDamage;
 
     public float GetCurrentHealth => CurrentHealth;
     public float MaximumHealth = 100;
@@ -28,22 +28,22 @@ public class Killable : MonoBehaviour
         CurrentHealth = MaximumHealth;
     }
 
-    public void InflictDamage(float damage)
+    public void InflictDamage(float damage, Vector2 worldSourcePosition)
     {
         CurrentHealth -= damage;
-        if (tookDamage != null)
+        if (TookDamage != null)
         {
-            tookDamage(damage, CurrentHealth);
+            TookDamage(damage, CurrentHealth);
         }
         
         if (CurrentHealth == 0)
         {
-            if (wasKilled == null)
+            if (WasKilled == null)
             {
                 Debug.LogWarning($"Object {gameObject.name} has died but has no 'wasKilled' event.", this);
                 return;
             }
-            wasKilled();
+            WasKilled();
         }
     }
 }

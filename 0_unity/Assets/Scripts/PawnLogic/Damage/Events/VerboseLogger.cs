@@ -16,7 +16,7 @@ public class VerboseLogger : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<Killable>().tookDamage += OnDamage;
-        GetComponent<Killable>().wasKilled += OnDeath;
+        GetComponent<Killable>().TookDamage += OnDamage;
+        GetComponent<Killable>().WasKilled += OnDeath;
     }
 }

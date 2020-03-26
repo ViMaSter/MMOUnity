@@ -11,6 +11,6 @@ public class DestroyOnDeath : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<Killable>().wasKilled += OnDeath;
+        GetComponent<Killable>().WasKilled += OnDeath;
     }
 }

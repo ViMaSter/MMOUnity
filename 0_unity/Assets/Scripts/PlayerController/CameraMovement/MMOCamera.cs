@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MMOCamera : MonoBehaviour
 {
@@ -69,7 +70,7 @@ public class MMOCamera : MonoBehaviour
     void Update()
     {
         Vector2 input = Vector2.zero;
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             input = new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
         }
@@ -102,7 +103,6 @@ public class MMOCamera : MonoBehaviour
             float backwardsModifier = Mathf.Abs(movementDirection.x - angleOffset) % 360;
             float angle = (backwardsModifier - 180);
             float val = Mathf.Abs(Mathf.Clamp(angle, -(backwardsCameraAdjustmentAngleDeadzone/2), (backwardsCameraAdjustmentAngleDeadzone/2)) / (backwardsCameraAdjustmentAngleDeadzone/2));
-            Debug.Log("Angle: " + angle + "\nval: " + val);
 			if (req.sqrMagnitude != 0)
 			{
 				movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, (1 - velocityBasedAngleCorrection) * val) + 360 % 360;
@@ -122,7 +122,7 @@ public class MMOCamera : MonoBehaviour
             movementDirection += new Vector2(0, input.y);
             movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
 
-            scenicDirectionAngle += -input.x;
+            scenicDirectionAngle += input.x;
         }
         else
         {

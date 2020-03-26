@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class DealDamageUI : MonoBehaviour
 {
-    PlayerController playerController;
+    TargettingController targettingController;
 
     private void Awake()
     {
-        playerController = GetComponent<PlayerController>();
+        targettingController = GetComponent<TargettingController>();
         GetComponent<SingleTargetSelector>().OnSelectionChanged += OnSelectionChanged;
     }
 
@@ -22,7 +22,7 @@ public class DealDamageUI : MonoBehaviour
         return (Vector3? position, RaycastHit[] targets) => {
             foreach(var target in targets)
             {
-                target.transform.GetComponent<Killable>().InflictDamage(damage);
+                target.transform.GetComponent<Killable>().InflictDamage(damage, new Vector2(transform.position.x, transform.position.z));
             }
             return;
         };
@@ -37,14 +37,14 @@ public class DealDamageUI : MonoBehaviour
             {
                 if (GUI.Button(new Rect(50 + 200 * (sizeIndex + 1), 50 * damageIndex, 200, 50), $"[AOE] Deal {damageIntervals[damageIndex]} damage (size {sizes[sizeIndex]})"))
                 {
-                    playerController.RetrieveAoESelectorPosition(sizes[sizeIndex], ApplyAoEDamage(damageIntervals[damageIndex]).Invoke);
+                    targettingController.RetrieveAoESelectorPosition(sizes[sizeIndex], ApplyAoEDamage(damageIntervals[damageIndex]).Invoke);
                 }
             }
             if (killableTarget != null)
             {
                 if (GUI.Button(new Rect(0, 50 * damageIndex, 200, 50), $"[SINGLE] Deal {damageIntervals[damageIndex]} damage"))
                 {
-                    killableTarget.InflictDamage(damageIntervals[damageIndex]);
+                    killableTarget.InflictDamage(damageIntervals[damageIndex], new Vector2(transform.position.x, transform.position.z));
                 }
             }
         }
