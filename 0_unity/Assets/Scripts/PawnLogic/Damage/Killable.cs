@@ -28,7 +28,7 @@ public class Killable : MonoBehaviour
         CurrentHealth = MaximumHealth;
     }
 
-    public void InflictDamage(float damage, Vector2 worldSourcePosition)
+    public void InflictDamage(float damage)
     {
         CurrentHealth -= damage;
         if (TookDamage != null)

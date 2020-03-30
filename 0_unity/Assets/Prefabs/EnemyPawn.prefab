@@ -87,10 +87,9 @@ GameObject:
   - component: {fileID: 6704312384350581550}
   - component: {fileID: 6704312384350581549}
   - component: {fileID: 6704312384350581548}
-  - component: {fileID: 6704312384350581555}
   - component: {fileID: 6704312384350581554}
   m_Layer: 0
-  m_Name: EnemyPawn (1)
+  m_Name: EnemyPawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,18 +195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaximumHealth: 100
---- !u!114 &6704312384350581555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6704312384350581553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0149889f12f2a24a92bfed764165208, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6704312384350581554
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,13 +10,12 @@ public class AreaOfEffectSelector : MonoBehaviour
     public Vector3 offsetFromSurface = new Vector3(0, 0.1f, 0);
 
     
-    public delegate void OnAoEPositionSelectedEvent(Vector3? newTarget, RaycastHit[] affectedTargets);
+    public delegate void OnAoEPositionSelectedEvent(Vector3? newTarget);
     public event OnAoEPositionSelectedEvent OnAoEPositionSelected;
 
     private int validAoELayer;
     private int invalidAoELayer;
-
-    public float AoEHitHeightBounds = 100;
+    
     public float Radius = 1f;
 
     private void Awake()
@@ -33,14 +32,14 @@ public class AreaOfEffectSelector : MonoBehaviour
 
     public void CancelSelection()
     {
-        SubmitAndReset(null, new RaycastHit[0]);
+        SubmitAndReset(null);
     }
 
-    private void SubmitAndReset(Vector3? newTarget, RaycastHit[] affectedTargets)
+    private void SubmitAndReset(Vector3? newTarget)
     {
         var events = OnAoEPositionSelected;
         OnAoEPositionSelected = null;
-        events(newTarget, affectedTargets);
+        events(newTarget);
         
         validAoEIndicator.transform.localScale = Vector3.zero;
         invalidAoEIndicator.transform.localScale = Vector3.zero;
@@ -57,15 +56,7 @@ public class AreaOfEffectSelector : MonoBehaviour
         {
             if (mouseHit.transform.gameObject.layer == validAoELayer)
             {
-                SubmitAndReset(
-                    null, 
-                    Physics.CapsuleCastAll(
-                        mouseHit.point - (Vector3.up * AoEHitHeightBounds),
-                        mouseHit.point + (Vector3.up * AoEHitHeightBounds),
-                        Radius,
-                        Vector3.up
-                    ).Where(hit => hit.transform.GetComponent<Selectable>() != null).ToArray()
-                );
+                SubmitAndReset(mouseHit.point);
             }
         }
     }

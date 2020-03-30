@@ -30,9 +30,9 @@ namespace DataEditor
         }
     }
     
-    [CustomEditor(typeof(Data.AoEAttack))]
+    [CustomEditor(typeof(Data.AreaOfEffectAttack))]
     [CanEditMultipleObjects]
-    public class AoEAttack : Editor
+    public class AreaOfEffectAttack : Editor
     { 
         private static readonly string[] propertiesToWatch = { "displayName", "icon", "attackValueAtCenter", "radius", "falloffByDistance" }; 
         Dictionary<string, SerializedProperty> properties;
@@ -48,7 +48,7 @@ namespace DataEditor
 
         void OnSceneGUI(SceneView sceneView)
         {
-            Data.AoEAttack item = (Data.AoEAttack)target;
+            Data.AreaOfEffectAttack item = (Data.AreaOfEffectAttack)target;
 
             Handles.color = new Color(1, 0, 0, 0.1f);
 
@@ -64,7 +64,7 @@ namespace DataEditor
 
         public override void OnInspectorGUI()
         {
-            Data.AoEAttack item = (Data.AoEAttack)target;
+            Data.AreaOfEffectAttack item = (Data.AreaOfEffectAttack)target;
 
             serializedObject.Update();
             foreach (SerializedProperty property in properties.Values)

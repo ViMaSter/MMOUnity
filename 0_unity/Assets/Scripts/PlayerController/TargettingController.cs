@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(SingleTargetSelector))]
+[RequireComponent(typeof(AreaOfEffectSelector))]
 public class TargettingController : MonoBehaviour
 {
     public SingleTargetSelector singleTargetSelector;
@@ -42,7 +44,7 @@ public class TargettingController : MonoBehaviour
         }
     }
 
-    public void ReenableSingleTargetSelector(Vector3? selectedAoEPosition, RaycastHit[] targets)
+    public void ReenableSingleTargetSelector(Vector3? selectedAoEPosition)
     {
         singleTargetSelector.enabled = true;
         areaOfEffectSelector.enabled = false;
