@@ -255,6 +255,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb8d62939e0cf64ca1259289f04a426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  singleTargetAttacks:
+  - {fileID: 11400000, guid: f302cdf5e1326c54db853c8750eba4f8, type: 2}
+  - {fileID: 11400000, guid: b275514a886b07240ac921c138d2c3b9, type: 2}
+  - {fileID: 11400000, guid: 8e473abeb6c3447438b9ae117a91a879, type: 2}
+  - {fileID: 11400000, guid: 8cf39fef929d34942a97a1342215f3ef, type: 2}
+  areaOfEffectAttacksByRadius:
+    m_keys:
+    - 1
+    - 2
+    - 5
+    - 10
+    m_values:
+    - data:
+      - {fileID: 11400000, guid: 6b69935fa9d4cc74591db9a987593ab2, type: 2}
+      - {fileID: 11400000, guid: 8653771502c920d41948dbeb597183eb, type: 2}
+      - {fileID: 11400000, guid: 7e761bf190ba82f4c9e9dd4e97c5cd7b, type: 2}
+      - {fileID: 11400000, guid: fa518c301792718468771fae7e6ed4fc, type: 2}
+    - data:
+      - {fileID: 11400000, guid: a8938751fdd1b5540882bf6d3f816260, type: 2}
+      - {fileID: 11400000, guid: 5441ee7ea5203a54398f687d0d36f677, type: 2}
+      - {fileID: 11400000, guid: 5fa260805ecbfc34a882da796091a1a1, type: 2}
+      - {fileID: 11400000, guid: 9aca99a6d3327994ab2cd8697e870cf6, type: 2}
+    - data:
+      - {fileID: 11400000, guid: 14efe4457dc0be94ea3cb37b4c6b10f1, type: 2}
+      - {fileID: 11400000, guid: a88ac5ef071e40d47ad0dde89178cd1a, type: 2}
+      - {fileID: 11400000, guid: 6c3ae9c4d571d044a8779aabb2d2d330, type: 2}
+      - {fileID: 11400000, guid: a76afe7f09efb814dade09944646cdd2, type: 2}
+    - data:
+      - {fileID: 11400000, guid: 4026eac884a073945b910bcafe2abfed, type: 2}
+      - {fileID: 11400000, guid: 7c8c985314717514eb4e893b9a72aa5c, type: 2}
+      - {fileID: 11400000, guid: 8f3b73beb309b8a45a1d027bcd9c13f3, type: 2}
+      - {fileID: 11400000, guid: 59b0398b81cd6c14ea15a5a29c26f4da, type: 2}
 --- !u!114 &411214805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +317,6 @@ MonoBehaviour:
   invalidAoEIndicator: {fileID: 6996588624159014096}
   camera: {fileID: 1204919641}
   offsetFromSurface: {x: 0, y: 0.001, z: 0}
-  AoEHitHeightBounds: 100
   Radius: 1
 --- !u!114 &411214808
 MonoBehaviour:
