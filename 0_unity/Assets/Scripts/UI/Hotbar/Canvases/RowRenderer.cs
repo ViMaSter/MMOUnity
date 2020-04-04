@@ -17,13 +17,17 @@ namespace UI.Hotbar.Canvases
 
         public Vector2 positionOffset = Vector2.zero;
 
-        public Vector2 position
+        private Vector2 defaultPosition
         {
             get
                 => new Vector2(
                     (Screen.width - (((Data.Row.AvailableActionCount * (BoxSize + BoxMargin)) - BoxMargin))) / 2,
                     Screen.height - ((BoxSize + BoxMargin) * (hotbarID + 1))
-                ) + positionOffset;
+                );
+        }
+        public Vector2 currentPosition
+        {
+            get => defaultPosition + positionOffset;
         }
 
         public ORIENTATION orientation = ORIENTATION.HORIZONTAL;
@@ -54,8 +58,8 @@ namespace UI.Hotbar.Canvases
         {
             int iconOffset = (BoxSize + BoxMargin) * buttonIndex;
             return new Rect(
-                (orientation == ORIENTATION.HORIZONTAL ? iconOffset : 0) + position.x,
-                (orientation == ORIENTATION.VERTICAL ? iconOffset : 0) + position.y,
+                (orientation == ORIENTATION.HORIZONTAL ? iconOffset : 0) + currentPosition.x,
+                (orientation == ORIENTATION.VERTICAL ? iconOffset : 0) + currentPosition.y,
                 BoxSize,
                 BoxSize
             );
@@ -77,8 +81,8 @@ namespace UI.Hotbar.Canvases
             get
             {
                 return new Vector2(
-                    Input.mousePosition.x,
-                    Screen.height - Input.mousePosition.y
+                    Event.current.mousePosition.x,
+                    Event.current.mousePosition.y
                 );
             }
         }
@@ -110,6 +114,12 @@ namespace UI.Hotbar.Canvases
             lastMousePosition = CursorPositionInUISpace;
         }
 
+        bool unlockUI = false;
+        private void Update()
+        {
+            unlockUI = Input.GetButton("Unlock UI");
+        }
+
         public void OnGUI()
         {
             ApplyMovement();
@@ -119,14 +129,18 @@ namespace UI.Hotbar.Canvases
                 orientation = orientation == ORIENTATION.HORIZONTAL ? ORIENTATION.VERTICAL : ORIENTATION.HORIZONTAL;
             }
 
+            Rect firstButtonPosition = GenerateButtonPosition(0);
+            Rect lastButtonPosition = GenerateButtonPosition(Data.Row.AvailableActionCount-1);
+            Rect buttonBounds = new Rect(firstButtonPosition.xMin, firstButtonPosition.yMin, lastButtonPosition.xMax, lastButtonPosition.yMax);
+            
+            if (!isInMovingMode && unlockUI && buttonBounds.Contains(CursorPositionInUISpace) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
+            {
+                lastMousePosition = CursorPositionInUISpace;
+                return;
+            }
+
             for (int i = 0; i < Data.Row.AvailableActionCount; i++)
             {
-                if (!isInMovingMode && Input.GetButton("Unlock UI") && GenerateButtonPosition(i).Contains(CursorPositionInUISpace) && Input.GetMouseButton(0))
-                {
-                    lastMousePosition = CursorPositionInUISpace;
-                    return;
-                }
-
                 bool hasAction = rowData[i] != null;
                 GUI.color = hasAction ? Color.green : Color.red;
 
