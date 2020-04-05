@@ -37,7 +37,17 @@ namespace UI.Hotbar.Canvases
         private void Update()
         {
             activeAnchor = DetermineActiveAnchor();
-            Debug.Log(activeAnchor);
+            for (int i = 0; i < 4; ++i)
+            {
+                if (Input.GetButtonDown("Cross Hotbar - Action L"+i))
+                {
+                    Debug.Log($"Action: {activeAnchor}|{i}");
+                }
+                if (Input.GetButtonDown("Cross Hotbar - Action R"+i))
+                {
+                    Debug.Log($"Action: {activeAnchor}|{i+4}");
+                }
+            }
         }
 
         private CrossAnchors DetermineActiveAnchor()
@@ -138,10 +148,10 @@ namespace UI.Hotbar.Canvases
         enum CrossAnchors
         {
             NONE,
-            PRIMARY_LEFT,
-            PRIMARY_RIGHT,
-            SECONDARY_LEFT,
-            SECONDARY_RIGHT,
+            PRIMARY_LEFT = 1,
+            PRIMARY_RIGHT = 2,
+            SECONDARY_LEFT = 3,
+            SECONDARY_RIGHT = 4,
             COMBO_LEFT,
             COMBO_RIGHT
         }
