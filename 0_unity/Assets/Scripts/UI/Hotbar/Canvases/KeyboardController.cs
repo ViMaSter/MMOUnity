@@ -6,7 +6,7 @@ namespace UI.Hotbar.Canvases
     public class KeyboardController : MonoBehaviour
     {
         [SerializeField]
-        Data.Container inspectedContainer;
+        Data.Container inspectedContainer = default;
 
         private Dictionary<KeyCode, int> modifierToHotbarID = new Dictionary<KeyCode, int> {
             {KeyCode.LeftShift,      1},

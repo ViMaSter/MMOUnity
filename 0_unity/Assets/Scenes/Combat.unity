@@ -201,7 +201,6 @@ GameObject:
   - component: {fileID: 411214804}
   - component: {fileID: 411214806}
   - component: {fileID: 411214805}
-  - component: {fileID: 411214808}
   - component: {fileID: 411214809}
   - component: {fileID: 411214803}
   - component: {fileID: 411214807}
@@ -331,20 +330,6 @@ MonoBehaviour:
   camera: {fileID: 1204919641}
   offsetFromSurface: {x: 0, y: 0.001, z: 0}
   Radius: 1
---- !u!114 &411214808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 411214801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f18251ba92b4e4fb7a2490a5bb1731, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  playerPawnMovement: {fileID: 0}
 --- !u!114 &411214809
 MonoBehaviour:
   m_ObjectHideFlags: 0

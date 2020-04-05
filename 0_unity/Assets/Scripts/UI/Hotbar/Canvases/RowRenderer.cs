@@ -5,7 +5,7 @@ namespace UI.Hotbar.Canvases
     public class RowRenderer : MonoBehaviour
     {
         [SerializeField]
-        Data.Container inspectedContainer;
+        Data.Container inspectedContainer = default;
 
         public enum ORIENTATION
         {
@@ -34,12 +34,14 @@ namespace UI.Hotbar.Canvases
 
         private Data.Row rowData;
 
-        private GUIStyle style = new GUIStyle();
+        [SerializeField]
+        private GUISkin CanBeExecutedStyle = default;
+        [SerializeField]
+        private GUISkin CanNotBeExecutedStyle = default;
 
         public void Awake()
         {
             rowData = inspectedContainer[hotbarID];
-            style.normal.background = Texture2D.whiteTexture;
         }
 
         private const int BoxSize = 50;
@@ -133,10 +135,25 @@ namespace UI.Hotbar.Canvases
             for (int i = 0; i < Data.Row.AvailableActionCount; i++)
             {
                 bool hasAction = rowData[i] != null;
-                GUI.color = hasAction ? Color.green : Color.red;
+                Rect position = GenerateButtonPosition(i);
+                string content = $"{i.ToString()}\r\n{(!hasAction ? "[BLANK]" : rowData[i].Name)}";
+                GUIStyle style =    new GUIStyle(
+                                        hasAction && rowData[i].CanBeExecuted(this.transform, this.transform) ?
+                                            CanBeExecutedStyle.button :
+                                            CanNotBeExecutedStyle.button
+                                    );
+                style.normal.background = rowData[i]?.Icon;
+                style.hover.background = rowData[i]?.Icon;
 
-                if (GUI.Button(GenerateButtonPosition(i), i.ToString() + (!hasAction ? "" : "\r\n" + rowData[i]), style))
+                if (GUI.Button(position, content, style))
                 {
+                    if (Event.current.control)
+                    {
+                        inspectedContainer.SetMapping(hotbarID, i, null);
+                        inspectedContainer.ActionToMap = null;
+                        continue;
+                    }
+
                     if (inspectedContainer.ActionToMap != null)
                     {
                         inspectedContainer.SetMapping(hotbarID, i, inspectedContainer.ActionToMap);
@@ -150,6 +167,7 @@ namespace UI.Hotbar.Canvases
                         continue;
                     }
                     Debug.Log($"Run UI action {hotbarID}/{i}: {rowData[i]}");
+                    rowData[i].Execute(this.transform, null);
                 }
             }
         }

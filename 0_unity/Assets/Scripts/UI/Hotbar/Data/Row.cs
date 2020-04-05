@@ -6,14 +6,14 @@ namespace UI.Hotbar.Data
     {
         public const int AvailableActionCount = 12;
         
-        [SerializeField] 
-        private ActionID[] actionIDs;
+        [SerializeField]
+        private Game.Data.Actions.Action[] actionIDs = default;
         public Row()
         {
-            actionIDs = new ActionID[AvailableActionCount];
+            actionIDs = new Game.Data.Actions.Action[AvailableActionCount];
         }
 
-        public void SetAction(int index, ActionID actionID)
+        public void SetAction(int index, Game.Data.Actions.Action actionID)
         {
             if (index >= AvailableActionCount)
             {
@@ -23,7 +23,7 @@ namespace UI.Hotbar.Data
             actionIDs[index] = actionID;
         }
 
-        public ActionID this[int key]
+        public Game.Data.Actions.Action this[int key]
         {
             get => actionIDs[key];
             set => SetAction(key, value);

@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace UI.Combat.Canvases
 {
-    [Serializable] public class AreaOfEffectStorage : SerializableDictionary.Storage<List<Data.AreaOfEffectAttack>> {} 
-    [Serializable] public class AreaOfEffectDictionary : SerializableDictionary<string, List<Data.AreaOfEffectAttack>, AreaOfEffectStorage> {} 
+    [Serializable] public class AreaOfEffectStorage : SerializableDictionary.Storage<List<Game.Data.Actions.Attacks.AreaOfEffectAttack>> {} 
+    [Serializable] public class AreaOfEffectDictionary : SerializableDictionary<string, List<Game.Data.Actions.Attacks.AreaOfEffectAttack>, AreaOfEffectStorage> {} 
 
     public class DealDamageUI : MonoBehaviour
     {
         TargettingController targettingController;
 
         [SerializeField]
-        Data.SingleTargetAttack[] singleTargetAttacks;
+        Game.Data.Actions.Attacks.SingleTargetAttack[] singleTargetAttacks = default;
 
         [SerializeField]
-        AreaOfEffectDictionary areaOfEffectAttacksByRadius;
+        AreaOfEffectDictionary areaOfEffectAttacksByRadius = default;
         private void Awake()
         {
             targettingController = GetComponent<TargettingController>();
@@ -28,7 +28,7 @@ namespace UI.Combat.Canvases
             killableTarget = newSelection?.GetComponent<Killable>();
         }
 
-        Action<Vector3?> ApplyAoEDamage(Data.AreaOfEffectAttack attack)
+        Action<Vector3?> ApplyAoEDamage(Game.Data.Actions.Attacks.AreaOfEffectAttack attack)
         {
             return (Vector3? position) => {
                 if (!position.HasValue)
@@ -46,7 +46,7 @@ namespace UI.Combat.Canvases
                 int column = 0;
                 foreach (var entry in areaOfEffectAttacksByRadius)
                 {
-                    (string radius, List<Data.AreaOfEffectAttack> attacks) = entry;
+                    (string radius, List<Game.Data.Actions.Attacks.AreaOfEffectAttack> attacks) = entry;
                     int row = 0;
                     foreach (var attack in attacks)
                     {

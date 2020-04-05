@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -145,8 +146,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -315,7 +317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1467401789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +334,9 @@ MonoBehaviour:
   hotbarID: 3
   positionOffset: {x: 0, y: 0}
   orientation: 0
+  CanBeExecutedStyle: {fileID: 11400000, guid: d9795b073849bce4dbd084d742e03cd1, type: 2}
+  CanNotBeExecutedStyle: {fileID: 11400000, guid: 876172798664fbc4fa6f8b5619e730a5,
+    type: 2}
 --- !u!114 &1467401790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +353,9 @@ MonoBehaviour:
   hotbarID: 2
   positionOffset: {x: 0, y: 0}
   orientation: 0
+  CanBeExecutedStyle: {fileID: 11400000, guid: d9795b073849bce4dbd084d742e03cd1, type: 2}
+  CanNotBeExecutedStyle: {fileID: 11400000, guid: 876172798664fbc4fa6f8b5619e730a5,
+    type: 2}
 --- !u!114 &1467401791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,6 +372,9 @@ MonoBehaviour:
   hotbarID: 1
   positionOffset: {x: 0, y: 0}
   orientation: 0
+  CanBeExecutedStyle: {fileID: 11400000, guid: d9795b073849bce4dbd084d742e03cd1, type: 2}
+  CanNotBeExecutedStyle: {fileID: 11400000, guid: 876172798664fbc4fa6f8b5619e730a5,
+    type: 2}
 --- !u!114 &1467401792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +391,9 @@ MonoBehaviour:
   hotbarID: 0
   positionOffset: {x: 0, y: 0}
   orientation: 0
+  CanBeExecutedStyle: {fileID: 11400000, guid: d9795b073849bce4dbd084d742e03cd1, type: 2}
+  CanNotBeExecutedStyle: {fileID: 11400000, guid: 876172798664fbc4fa6f8b5619e730a5,
+    type: 2}
 --- !u!114 &1467401793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,7 +407,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 1467401794}
-  availableActions: 0000000001000000020000000300000004000000050000000600000007000000
+  availableActions:
+  - {fileID: 11400000, guid: 14efe4457dc0be94ea3cb37b4c6b10f1, type: 2}
+  - {fileID: 11400000, guid: a88ac5ef071e40d47ad0dde89178cd1a, type: 2}
+  - {fileID: 11400000, guid: 8e473abeb6c3447438b9ae117a91a879, type: 2}
+  - {fileID: 11400000, guid: 8cf39fef929d34942a97a1342215f3ef, type: 2}
+  Skin: {fileID: 11400000, guid: d9795b073849bce4dbd084d742e03cd1, type: 2}
 --- !u!114 &1467401794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,6 +426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableRows: 4
+  ActionToMap: {fileID: 0}
 --- !u!4 &1467401795
 Transform:
   m_ObjectHideFlags: 0
@@ -438,7 +458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1892026546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableRows: 4
+  ActionToMap: {fileID: 0}
 --- !u!4 &1892026548
 Transform:
   m_ObjectHideFlags: 0

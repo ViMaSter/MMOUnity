@@ -5,9 +5,9 @@ public class MMOCamera : MonoBehaviour
 {
     #region Basics
     [SerializeField]
-    Camera cameraComponent;
+    Camera cameraComponent = default;
     [SerializeField]
-    Transform target;
+    Transform target = default;
 
     [SerializeField]
     Vector3 targetOffset = new Vector3(0, 2, 0);
@@ -16,8 +16,6 @@ public class MMOCamera : MonoBehaviour
     [SerializeField]
     Vector3[] zoomTargetOffsetBounds = { new Vector3(0, 0, 5.0f), new Vector3(0, 0, 10.0f) };
     float zoomFactor = 1.0f;
-
-	private float walkingOffsetInDegrees = 5;
 
     Vector2 movementDirection = new Vector2(0, -45);
     float scenicDirectionAngle = 0.0f;
@@ -38,9 +36,6 @@ public class MMOCamera : MonoBehaviour
     float[] cameraAngleYBounds = { -89, 0 };
 
     float currentTargetY = 0.0f;
-	[Range(0, 1)]
-    [SerializeField]
-    float targetYInterpolation = 0.98f;
 	
 	[Range(0, 1)]
     [SerializeField]
@@ -57,8 +52,6 @@ public class MMOCamera : MonoBehaviour
         zoomFactor -= direction;
         zoomFactor = Mathf.Clamp(zoomFactor, 0.0f, 1.0f);
     }
-
-    private bool cameraAnalogAxisInUse = false;
 
     [Header("Gamepad")]
     [Range(0, 5)]

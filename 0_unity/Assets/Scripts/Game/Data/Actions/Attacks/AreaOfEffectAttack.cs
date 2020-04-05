@@ -1,22 +1,38 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Data
+namespace Game.Data.Actions.Attacks
 {
     [CreateAssetMenu(fileName = "AreaOfEffectAttack", menuName = "Data/Attack/Area of Effect", order = 101)]
-    public class AreaOfEffectAttack : Attack
+    public class AreaOfEffectAttack : Game.Data.Actions.Attack
     {
         [SerializeField]
-        private float attackValueAtCenter;
+        private float attackValueAtCenter = default;
         public float AttackValueAtCenter => attackValueAtCenter;
         
         [SerializeField]
-        private float radius;
+        private float radius = default;
         public float Radius => radius;
         
         [SerializeField]
-        private AnimationCurve falloffByDistance;
+        private AnimationCurve falloffByDistance = default;
         public AnimationCurve FalloffByDistance => falloffByDistance;
+
+        public override bool CanBeExecuted(Transform executor, Transform target)
+        {
+            return CanApply(target.position, executor);
+        }
+
+        public override bool Execute(Transform executor, Transform target)
+        {
+            var targetHittable = target.GetComponent<Killable>();
+            return TryApply(target.position, executor);
+        }
+
+        public bool CanApply(Vector2 worldTargetPosition, Component source)
+        {
+            return true;
+        }
 
         public bool TryApply(Vector2 worldTargetPosition, Component source)
         {

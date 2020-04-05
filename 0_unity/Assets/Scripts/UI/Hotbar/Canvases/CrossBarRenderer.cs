@@ -103,7 +103,7 @@ namespace UI.Hotbar.Canvases
         }
 
         [SerializeField]
-        private Data.Container inspectedContainer;
+        private Data.Container inspectedContainer = default;
 
         [SerializeField]
         private int currentPrimaryRowID = 0;

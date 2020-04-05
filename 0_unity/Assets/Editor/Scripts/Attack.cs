@@ -5,17 +5,24 @@ using UnityEditor;
 
 namespace DataEditor
 {
-    [CustomEditor(typeof(Data.SingleTargetAttack))]
+    [CustomEditor(typeof(Game.Data.Actions.Attacks.SingleTargetAttack))]
     [CanEditMultipleObjects]
     public class SingleTargetAttack : Editor
     { 
-        private static readonly string[] propertiesToWatch = { "displayName", "icon", "regularAttackValue", "isPositional" }; 
+        private static readonly string[] propertiesToWatch = { "displayName", "hotbarImage", "regularAttackValue", "isPositional" }; 
         Dictionary<string, SerializedProperty> properties;
         
         void OnEnable()
         {
             properties = propertiesToWatch
-                .Select(propertyName => new KeyValuePair<string, SerializedProperty>(propertyName, serializedObject.FindProperty(propertyName)))
+                .Select(propertyName => {
+                    var propertyData = serializedObject.FindProperty(propertyName);
+                    if (propertyData == null)
+                    {
+                        throw new KeyNotFoundException($"Property {propertyName} couldn't be found on {serializedObject}");
+                    }
+                    return new KeyValuePair<string, SerializedProperty>(propertyName, propertyData);
+                })
                 .ToDictionary(item => item.Key, item => item.Value);
         }
 
@@ -30,7 +37,7 @@ namespace DataEditor
         }
     }
     
-    [CustomEditor(typeof(Data.AreaOfEffectAttack))]
+    [CustomEditor(typeof(Game.Data.Actions.Attacks.AreaOfEffectAttack))]
     [CanEditMultipleObjects]
     public class AreaOfEffectAttack : Editor
     { 
@@ -48,7 +55,7 @@ namespace DataEditor
 
         void OnSceneGUI(SceneView sceneView)
         {
-            Data.AreaOfEffectAttack item = (Data.AreaOfEffectAttack)target;
+            Game.Data.Actions.Attacks.AreaOfEffectAttack item = (Game.Data.Actions.Attacks.AreaOfEffectAttack)target;
 
             Handles.color = new Color(1, 0, 0, 0.1f);
 
@@ -64,7 +71,7 @@ namespace DataEditor
 
         public override void OnInspectorGUI()
         {
-            Data.AreaOfEffectAttack item = (Data.AreaOfEffectAttack)target;
+            Game.Data.Actions.Attacks.AreaOfEffectAttack item = (Game.Data.Actions.Attacks.AreaOfEffectAttack)target;
 
             serializedObject.Update();
             foreach (SerializedProperty property in properties.Values)
