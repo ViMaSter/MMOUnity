@@ -35,20 +35,11 @@ namespace UI.Hotbar.Canvases
         private Data.Row rowData;
 
         private GUIStyle style = new GUIStyle();
-        private Texture2D whiteTexture;
-        void CreateTexture()
-        {
-            whiteTexture = new Texture2D(1, 1);
-            whiteTexture.SetPixel(0, 0, Color.white);
-            whiteTexture.Apply();
-        }
 
         public void Awake()
         {
-            CreateTexture();
-
             rowData = inspectedContainer[hotbarID];
-            style.normal.background = whiteTexture;
+            style.normal.background = Texture2D.whiteTexture;
         }
 
         private const int BoxSize = 50;

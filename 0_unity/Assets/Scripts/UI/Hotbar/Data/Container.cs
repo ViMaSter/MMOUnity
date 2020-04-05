@@ -11,8 +11,10 @@ namespace UI.Hotbar.Data
         [SerializeField]
         private int availableRows = 4;
 
+        public int RowCount => availableRows;
+
         [SerializeField]
-        Dictionary<int, Row> actions;
+        private Dictionary<int, Row> actions;
         public void Awake()
         {
             actions = Enumerable.Range(0, availableRows).Select(index => new KeyValuePair<int, Row>(index, new Row())).ToDictionary(item => item.Key, item => item.Value);
