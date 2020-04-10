@@ -1,0 +1,19 @@
+### Create user
+POST https://localhost:2774/Authorization/CreateUser HTTP/1.1
+Content-Type: application/json
+
+{
+    "Username": "username",
+    "Password": "password"
+}
+
+### Login as user
+POST https://localhost:2774/Authorization/CreateSession HTTP/1.1
+Content-Type: application/json
+
+{
+    "Username": "username",
+    "Password": "password"
+}
+
+###

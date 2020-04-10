@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  mssqldatabase:
+    container_name: mssql-database
+    build:
+      context: ./
+      args:
+        - SA_PASSWORD=${DB_Pass:-thisGetsAutomaticallyReplaced}
+        - WITH_EXAMPLE_DATA=${WITH_EXAMPLE_DATA}
+        - DATABASE_NAME=${DATABASE_NAME}
+    ports:
+      - 1433:1433
+    labels:
+      com.mmo.containertype: "mssql-database"
