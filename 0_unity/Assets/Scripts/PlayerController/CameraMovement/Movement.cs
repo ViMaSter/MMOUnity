@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
@@ -31,16 +32,21 @@ public class Movement : MonoBehaviour
         movementDirectionRequest = direction;
     }
 
+    public void QueueJump()
+    {
+        if (!IsGrounded())
+        {
+            return;
+        }
+
+        rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+    }
+
     private void Update()
     {
         if (IsGrounded())
         {
             QueueMove(movementDirectionRequest);
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
-            }
         }
         ApplyMovement();
         if (IsGrounded())

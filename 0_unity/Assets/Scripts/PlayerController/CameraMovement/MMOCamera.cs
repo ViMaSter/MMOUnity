@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
 public class MMOCamera : MonoBehaviour
@@ -41,16 +43,26 @@ public class MMOCamera : MonoBehaviour
     [SerializeField]
     float velocityBasedAngleCorrection = 0.98f;
 
+    private Generated.GameControls gameControls;
+
+    [Serializable]
+    public enum CameraInputMode
+    {
+        NONE = 0,
+        SCENIC,
+        MOVEMENT
+    };
+
     void Awake()
     {
+        gameControls = new Generated.GameControls();
+
         transform.rotation = target.rotation;
         movementDirection.x = transform.eulerAngles.y;
     }
 
     public void Zoom(float direction)
     {
-        zoomFactor -= direction;
-        zoomFactor = Mathf.Clamp(zoomFactor, 0.0f, 1.0f);
     }
 
     [Header("Gamepad")]
@@ -60,67 +72,83 @@ public class MMOCamera : MonoBehaviour
     [Range(0, 90)]
     public float backwardsCameraAdjustmentAngleDeadzone = 10.0f;
 
+    private CameraInputMode currentCameraInputMode = CameraInputMode.NONE;
+
+    public void ApplyScenicCameraSpin(Vector2 input)
+    {
+        // override current visual direction based on current camera direction and fully activate scenic camera transition
+        scenicDirectionAngle = InterpolatedCameraDirection.x;
+        scenicAnglePercentage = 1.0f;
+
+        Vector2 req = target.GetComponent<Movement>().MovementDirectionRequest;
+        Vector2 vel = target.GetComponent<Movement>().Velocity;
+        float angleOffset = Mathf.Rad2Deg * Mathf.Atan2(-req.x, req.y);
+
+        float backwardsModifier = Mathf.Abs(movementDirection.x - angleOffset) % 360;
+        float angle = (backwardsModifier - 180);
+        float val = Mathf.Abs(Mathf.Clamp(angle, -(backwardsCameraAdjustmentAngleDeadzone/2), (backwardsCameraAdjustmentAngleDeadzone/2)) / (backwardsCameraAdjustmentAngleDeadzone/2));
+        if (req.sqrMagnitude != 0)
+        {
+            movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, (1 - velocityBasedAngleCorrection) * val) + 360 % 360;
+        }
+    
+        // apply Y-axis update to movement direction and X-axis update to scenic camera direction
+        movementDirection += new Vector2(0, input.y);
+        movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
+
+        scenicDirectionAngle += input.x;
+    }
+
+    public void ApplyMovementCameraSpin(Vector2 input)
+    {
+        // override current movement direction based on current camera direction and fully activate scenic camera transition
+        movementDirection.x = InterpolatedCameraDirection.x;
+        scenicAnglePercentage = 0.0f;
+    
+        // apply X- and Y-axis update to movement direction
+        movementDirection += new Vector2(input.x, input.y);
+        movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
+    }
+
+    void DetermineCameraState()
+    {
+        Debug.Log(gameControls.Camera.SetScenicCameraMode);
+        if (gameControls.Camera.SetScenicCameraMode.ReadValue<bool>())
+        {
+            currentCameraInputMode = CameraInputMode.SCENIC;
+            return;
+        }
+        if (gameControls.Camera.SetMovementCameraMode.ReadValue<bool>())
+        {
+            currentCameraInputMode = CameraInputMode.MOVEMENT;
+            return;
+        }
+
+        currentCameraInputMode = CameraInputMode.NONE;
+        return;
+    }
+
     void Update()
     {
-        Vector2 input = Vector2.zero;
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-        {
-            input = new Vector2(-Input.GetAxisRaw("CameraX"), Input.GetAxisRaw("CameraY"));
-        }
-        else if (Input.GetAxisRaw("CameraAnalogX") != 0 || Input.GetAxisRaw("CameraAnalogY") != 0)
-        {
-            input = new Vector2(-Input.GetAxisRaw("CameraAnalogX"), Input.GetAxisRaw("CameraAnalogY")) * analogStickSensitivity;
-        }
+        zoomFactor -= gameControls.Camera.Zoom.ReadValue<float>() * Time.deltaTime * 0.1f;
+        zoomFactor = Mathf.Clamp(zoomFactor, 0.0f, 1.0f);
 
-        Zoom(Input.mouseScrollDelta.y * 0.1f);
+        Debug.Log(currentCameraInputMode);
 
-        // override current movement direction based on current camera direction and fully revoke scenic camera transition
-        if (Input.GetMouseButtonDown(1))
-        {
-            movementDirection.x = InterpolatedCameraDirection.x;
-            scenicAnglePercentage = 0.0f;
-        }
+        DetermineCameraState();
 
-        if (Input.GetMouseButton(1) || Input.GetAxisRaw("CameraAnalogX") != 0 || Input.GetAxisRaw("CameraAnalogY") != 0)
+        Vector2 input = gameControls.Camera.Spin.ReadValue<Vector2>();
+        switch (currentCameraInputMode)
         {
-            // apply X- and Y-axis update to movement direction
-            movementDirection += new Vector2(input.x, input.y);
-            movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
-        }
-		else
-		{
-			Vector2 req = target.GetComponent<Movement>().MovementDirectionRequest;
-			Vector2 vel = target.GetComponent<Movement>().Velocity;
-			float angleOffset = Mathf.Rad2Deg * Mathf.Atan2(-req.x, req.y);
-
-            float backwardsModifier = Mathf.Abs(movementDirection.x - angleOffset) % 360;
-            float angle = (backwardsModifier - 180);
-            float val = Mathf.Abs(Mathf.Clamp(angle, -(backwardsCameraAdjustmentAngleDeadzone/2), (backwardsCameraAdjustmentAngleDeadzone/2)) / (backwardsCameraAdjustmentAngleDeadzone/2));
-			if (req.sqrMagnitude != 0)
-			{
-				movementDirection.x = Mathf.LerpAngle(movementDirection.x, angleOffset, (1 - velocityBasedAngleCorrection) * val) + 360 % 360;
-			}
-        }
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            // override current visual direction based on current camera direction and fully activate scenic camera transition
-            scenicDirectionAngle = InterpolatedCameraDirection.x;
-            scenicAnglePercentage = 1.0f;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            // apply Y-axis update to movement direction and X-axis update to scenic camera direction
-            movementDirection += new Vector2(0, input.y);
-            movementDirection.y = Mathf.Clamp(movementDirection.y, cameraAngleYBounds[0], cameraAngleYBounds[1]);
-
-            scenicDirectionAngle += input.x;
-        }
-        else
-        {
-            // slowly reset scenic camera transition
-            scenicAnglePercentage = Mathf.Clamp(scenicAnglePercentage - (scenicAngleSnapbackMaxValue * Time.deltaTime), 0, 1);
+            case CameraInputMode.NONE:
+                scenicAnglePercentage = Mathf.Clamp(scenicAnglePercentage - (scenicAngleSnapbackMaxValue * Time.deltaTime), 0, 1);
+                break;
+            case CameraInputMode.MOVEMENT:
+                ApplyMovementCameraSpin(input);
+                break;
+            case CameraInputMode.SCENIC:
+                ApplyScenicCameraSpin(input);
+                break;
         }
     }
 

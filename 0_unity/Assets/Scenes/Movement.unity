@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -166,6 +167,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -237,8 +239,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257929334}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -348,6 +351,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -453,7 +457,6 @@ MonoBehaviour:
   cameraAngleYBounds:
   - -89
   - 0
-  targetYInterpolation: 0.125
   velocityBasedAngleCorrection: 0.99
   analogStickSensitivity: 2
   backwardsCameraAdjustmentAngleDeadzone: 45
@@ -526,6 +529,7 @@ GameObject:
   - component: {fileID: 7390241568262772732}
   - component: {fileID: 7390241568262772735}
   - component: {fileID: 7390241568262772610}
+  - component: {fileID: 7390241568262772736}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -541,6 +545,84 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7390241568262772734}
   m_Enabled: 1
+--- !u!114 &7390241568262772736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7390241568262772734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: cbba751a0f2bb65489f9096537b09a05,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8c339a85-1b41-4ca6-a8ce-118830940aa0
+    m_ActionName: Pawn/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3ee85897-81e9-493e-9588-d74904a7d078
+    m_ActionName: Pawn/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 35cd4e3d-36a3-436d-b0a2-3a0f7bba0423
+    m_ActionName: Camera/SetMovementCameraMode[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7390241568262772610}
+        m_MethodName: Zoom
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 2
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eeb2e503-d3cb-4d1d-9db1-8f67a921c3a0
+    m_ActionName: Camera/SetScenicCameraMode[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7227e23f-f125-4a6a-a4c0-155889ef21e5
+    m_ActionName: Camera/Zoom[/Mouse/scroll/y]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5444b79-4c2a-4f72-90b9-cb9846a3a700
+    m_ActionName: Camera/Spin[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b009ea97-ce89-413d-b694-5fe728b6124f
+    m_ActionName: Targeting/TargetRay[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1a48b4e8-0671-4a3a-97fa-b008e28f585c
+    m_ActionName: Targeting/Change[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c9c8272c-5a95-4a80-9627-08ec2c4fe703
+    m_ActionName: Targeting/Target Cycle[/Keyboard/tab,/Keyboard/shift,/Keyboard/tab]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Camera
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!114 &7390241568326014800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,6 +647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7390241568326014803}
   - component: {fileID: 7390241568326014800}
+  - component: {fileID: 7390241568326014804}
   m_Layer: 0
   m_Name: LocalPlayer
   m_TagString: Untagged
@@ -588,6 +671,95 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7390241568326014804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7390241568326014802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: cbba751a0f2bb65489f9096537b09a05,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7390241568326014800}
+        m_MethodName: OnMovement
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8c339a85-1b41-4ca6-a8ce-118830940aa0
+    m_ActionName: Pawn/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7390241568326014800}
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3ee85897-81e9-493e-9588-d74904a7d078
+    m_ActionName: Pawn/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 35cd4e3d-36a3-436d-b0a2-3a0f7bba0423
+    m_ActionName: Camera/MovementSpin[/Mouse/rightButton,/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: eeb2e503-d3cb-4d1d-9db1-8f67a921c3a0
+    m_ActionName: Camera/ScenicSpin[/Mouse/leftButton,/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7227e23f-f125-4a6a-a4c0-155889ef21e5
+    m_ActionName: Camera/Zoom[/Mouse/scroll/y]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b009ea97-ce89-413d-b694-5fe728b6124f
+    m_ActionName: Targeting/TargetRay[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1a48b4e8-0671-4a3a-97fa-b008e28f585c
+    m_ActionName: Targeting/Change[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c9c8272c-5a95-4a80-9627-08ec2c4fe703
+    m_ActionName: Targeting/Target Cycle[/Keyboard/tab,/Keyboard/shift,/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5444b79-4c2a-4f72-90b9-cb9846a3a700
+    m_ActionName: Camera/Spin[/Mouse/delta]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Pawn
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 7390241568262772732}
 --- !u!136 &7390241568741945920
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -616,6 +788,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -693,7 +866,7 @@ MonoBehaviour:
   rigidbody: {fileID: 7390241568741945923}
   movementSpeed: 2.5
   movementFalloff: 0.25
-  jumpForce: 4
+  jumpForce: 2
 --- !u!33 &7390241568741945926
 MeshFilter:
   m_ObjectHideFlags: 0

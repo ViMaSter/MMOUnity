@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraMovementController : MonoBehaviour
 {
@@ -6,17 +7,24 @@ public class CameraMovementController : MonoBehaviour
     public new MMOCamera camera;
     public Movement playerPawnMovement;
 
-    private void Update()
+    public void OnJump(InputAction.CallbackContext callbackContext)
+    {
+        playerPawnMovement.QueueJump();
+    }
+
+    public void OnMovement(InputAction.CallbackContext callbackContext)
     {
         if (playerPawnMovement == null)
         {
             return;
         }
+
+        Vector2 input = callbackContext.ReadValue<Vector2>();
         
         Vector3 movementRequestInWorldSpace = new Vector3(
-            Input.GetAxis("MovementX"),
+            input.x,
             0,
-            Input.GetAxis("MovementY")
+            input.y
         );
 
         if (movementRequestInWorldSpace.sqrMagnitude != 0)
